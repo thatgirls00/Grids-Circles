@@ -18,9 +18,9 @@
 - 병합 전 반드시 팀원 리뷰 & 테스트
 - 병합 후 브랜치 삭제 (Delete branch 클릭)
 - 브랜치명 예시
-    - Feat/Place
-    - Feat/Login
-    - Fix/Login
+    - feat/place
+    - feat/login
+    - fix/login
 
 ## **Git 커밋 타입 목록**
 
