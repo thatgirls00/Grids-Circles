@@ -1,0 +1,30 @@
+# ----------------------------------------
+# 공통 설정 (팀원 공유)
+# ----------------------------------------
+spring:
+  # 기본으로 활성화할 프로파일을 정하고, 개인 설정으로 덮어씁니다.
+  # 개인 PC에서 실행할 때는 -Dspring.profiles.active=local 등으로 덮어쓰도록 유도
+  profiles:
+    active: default
+
+  jpa:
+    hibernate:
+      ddl-auto: update                          # DDL 전략 통일 (개발 환경 기준)
+    properties:
+      hibernate:
+        format_sql: true                        # SQL 포맷팅
+        show_sql: true                          # SQL 출력
+    database-platform: org.hibernate.dialect.MySQL8Dialect # DB 방언 통일
+    show-sql: true                              # (팀원 2의 방식) SQL 출력
+
+  output:
+    ansi:
+      enabled: always                           # 컬러 로그 (선택사항이나, 보기 좋음)
+
+# 공통 로깅 설정 (팀원 2의 상세 로깅 방식을 채택)
+logging:
+  level:
+    # SQL 파라미터, 결과, 트랜잭션 등 공통 디버깅에 필요한 로그 레벨 통일
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.extract: TRACE
+    org.springframework.transaction.interceptor: TRACE
