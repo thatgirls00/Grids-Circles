@@ -19,11 +19,27 @@ repositories {
 }
 
 dependencies {
+    // JPA (Hibernate 포함) - 엔티티와 DB 매핑 처리
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // MySQL 드라이버 - Spring Boot가 MySQL과 연결할 때 필요
+    implementation 'mysql:mysql-connector-java:8.0.33'
+
+    // Spring Web (Tomcat 내장) - REST API, MVC 웹 개발용
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // 개발 편의 기능 (자동 리스타트 등)
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // 테스트 관련 (JUnit5 + Spring Test)
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // 롬복
+    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
 }
+
 
 tasks.named('test') {
     useJUnitPlatform()
