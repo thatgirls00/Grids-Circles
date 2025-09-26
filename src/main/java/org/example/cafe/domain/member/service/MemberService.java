@@ -18,11 +18,8 @@ public class MemberService {
      * 회원이 아닐 경우: memberRepository 에 save
      */
 
-    public Member registerOrFindMember(Member member) {
-        return memberRepository.findByEmail(member.getEmail())
-                .orElseGet(() -> {
-                        member.setRole(Role.USER); //기본값 user
-                        return memberRepository.save(member);
-                });
+    public Member registerOrFindMember(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseGet(() -> memberRepository.save(Member.createNew(email)));
     }
 }
