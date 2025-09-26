@@ -1,12 +1,15 @@
 package org.example.cafe.domain.product.service;
 
+import org.example.cafe.domain.product.dto.ProductDto;
 import org.example.cafe.domain.product.entity.Product;
 import org.example.cafe.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.example.cafe.domain.product.entity.CoffeeImg;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +18,7 @@ public class ProductService {
 
 
     public List<Product> findAll() {
-        return productRepository.findAll();
+        return productRepository.findAllWithImages();
     }
 
     public Product create(String name, int price, int quantity) {
@@ -34,5 +37,19 @@ public class ProductService {
 
     public void delete(Product product) {
         productRepository.delete(product);
+    }
+
+    public List<ProductDto> getProducts() {
+        return productRepository.findAll().stream()
+                .map(product -> ProductDto.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .description(product.getDescription())
+                        .price(product.getPrice())
+                        .imageUrls(product.getImages().stream()
+                                .map(CoffeeImg::getUrl)
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
     }
 }
