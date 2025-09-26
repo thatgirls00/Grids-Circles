@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <title>카페 관리자 페이지 | 수퍼노바 카페</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+
+    <script src="/js/admin.js"></script>
+    <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+<div class="d-flex justify-content-between align-items-center mt-2 mb-4 px-4" id="top-bar">
+    <h1 class="mb-0">카페 관리자 페이지 | 수퍼노바카페</h1>
+    <div>
+        <a href="/index" class="btn btn-small btn-outline-dark me-2 del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap; margin-right: 10px">주문 페이지로 돌아가기</a>
+    </div>
+
+</div>
+
+
+<!-- 새로운 커피 추가 -->
+<div class="coffee-form">
+    <h2>커피 추가</h2>
+
+    <label for="newCoffeeName">
+        <input type="text" id="newCoffeeName" placeholder="커피 이름" />
+    </label>
+
+    <label for="newCoffeePrice">
+        <input type="number" id="newCoffeePrice" placeholder="가격 (원)" />
+    </label>
+
+    <label for="newCoffeeStock">
+        <input type="number" id="newCoffeeStock" placeholder="재고" />
+    </label>
+
+    <label for="newCoffeeImage">
+        <input type="file" id="newCoffeeImage" multiple />
+    </label>
+
+    <button class="btn btn-dark col-12 order-btn" onclick="addCoffee()">추가</button>
+</div>
+
+<!-- 커피 목록 -->
+<h2>커피 목록</h2>
+<table>
+    <thead>
+    <tr>
+        <th>이름</th>
+        <th>가격</th>
+        <th>이미지</th>
+        <th>재고</th>
+    </tr>
+    </thead>
+    <tbody id="coffeeTable">
+
+    </tbody>
+</table>
+
+<!-- 커피 수정 폼 -->
+<div id="editForm" style="display: none; margin-top: 20px;">
+    <h2>커피 수정</h2>
+    <label>
+        <input type="text" id="updateCoffeeName" placeholder="커피 이름" />
+    </label>
+    <label>
+        <input type="number" id="updateCoffeePrice" min="0" placeholder="가격 (원)" />
+    </label>
+    <label>
+        <input type="number" id="updateCoffeeStock" min="0" placeholder="재고" />
+    </label>
+    <label>
+        <input type="file" id="updateCoffeeImageUrl" multiple />
+    </label>
+    <button class="btn btn-dark col-12 order-btn" onclick="updateCoffee()">수정</button>
+    <button class="btn btn-dark col-12 order-btn" onclick="cancelUpdate()">취소</button>
+</div>
+</body>
+</html>

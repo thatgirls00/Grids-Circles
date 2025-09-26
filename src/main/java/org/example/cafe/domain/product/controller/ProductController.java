@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,13 +19,13 @@ public class ProductController {
     //상품 목록 조회 -> DB확인까지완료
     @GetMapping("/api/products")
     @Transactional(readOnly = true)
-    public List<ProductDto> getProducts(){
+    public Map<String, Object> getProducts() {
         List<ProductDto> productList = productService.findAll()
                 .stream()
                 .map(ProductDto::new)
                 .toList();
 
-        return productList;
+        return Map.of("data", productList);
     }
 
     //상품 등록 -> DB확인까지완료
