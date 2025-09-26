@@ -17,10 +17,4 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping
-    public ResponseEntity<RsData<Member>> registerOrFindMember(@RequestBody Member requestMember) {
-        Member member = memberService.registerOrFindMember(requestMember);
-        return ResponseEntity.ok(new RsData<>("200", "회원 조회/등록 완료", member));
-    }
-
 }
