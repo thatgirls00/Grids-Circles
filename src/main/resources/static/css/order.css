@@ -1,0 +1,164 @@
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+* {
+    font-family: Pretendard-Regular;
+}
+
+body {
+    background: #f5f5f5;
+}
+
+.stock-label {
+    background-color: #da3442; /* 완전 불투명한 Bootstrap 빨강 */
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 0.5rem;
+    font-size: 16px; /* 글자 살짝 키움 */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* 테두리 그림자 추가(더 선명하게) */
+}
+
+.hidden {
+    display: none !important;
+}
+
+.card {
+    margin: auto;
+    max-width: 950px;
+    width: 90%;
+    box-shadow: 0 6px 20px 0 rgba(38, 38, 38, 0.19);
+    border-radius: 1rem;
+    border: transparent;
+    height: 80vh;
+
+}
+
+.summary {
+    background-color: #ddd;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    padding: 4vh;
+
+    color: rgb(65, 65, 65);
+    height: 80vh;
+
+}
+
+#summary-list {
+    overflow-y: scroll;
+    height: 10.5vh;
+}
+
+#summary-list::-webkit-scrollbar {
+    display: compact;
+    width: 5px;
+    height: 15px;
+    background-color: lightgray;
+
+}
+
+/* Add a thumb */
+#summary-list::-webkit-scrollbar-thumb {
+    background: gray;
+}
+
+@media (max-width: 767px) {
+    .summary {
+        border-top-right-radius: unset;
+        border-bottom-left-radius: 1rem
+    }
+}
+
+.row {
+    margin: 0
+
+}
+
+.title b {
+    font-size: 1.5rem
+}
+
+.col-2,
+.col {
+    padding: 0 1vh
+}
+
+.col-2 {
+    display: flex;
+    flex-direction: column; /* 세로 방향 정렬 */
+    justify-content: center; /* 세로 가운데 */
+    align-items: center;     /* 가로 가운데 */
+    height: 100%;            /* 높이값이 있어야 세로 정렬됨 */
+}
+
+
+
+img {
+    width: 3.5rem
+}
+
+hr {
+    margin-top: 1.25rem
+}
+.products {
+    width: 100%;
+}
+.products .price, .products .action {
+    line-height: 38px;
+}
+.products .action {
+    line-height: 38px;
+}
+
+.add-button {
+    width: 38px;
+}
+
+.del-button {
+    width: 38px;
+}
+
+#delivery-info {
+    padding-top: 1.3vh;
+}
+
+.inform {
+    color: crimson;
+    font-size: 0.8rem;
+    padding-bottom: 0.5rem;
+}
+
+#coffee-list {
+    height: 68vh;
+    overflow-y: auto;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+/*.summary:hover {*/
+/*    overflow-y: auto;*/
+/*}*/
+
+
+#coffee-list::-webkit-scrollbar {
+    display: compact;
+    width: 5px;
+    height: 20px;
+    background-color: lightgray;
+
+}
+
+/* Add a thumb */
+#coffee-list::-webkit-scrollbar-thumb {
+    background: gray;
+}
+
+
+#coffee-list-box {
+    height: 80vh;
+}
