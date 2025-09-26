@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Supernova Coffee</title>
+    <link rel="stylesheet" href="/css/order.css">
+</head>
+<body>
+
+<div class="container card">
+    <div class="row">
+        <!-- 상품 목록 -->
+        <div class="col-8" id="coffee-list-box">
+            <div class="p-4">
+                <h1> Supernova Coffee 주문하기</h1>
+                <p class="inform">당일 오후 2시 이후 주문은 다음 날 배송됩니다.</p>
+                <div id="coffee-list">
+                    <table class="products">
+                        <thead>
+                        <tr>
+                            <th>상품</th>
+                            <th>설명</th>
+                            <th>가격</th>
+                            <th>수량</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="product : ${products}">
+                            <td>
+                                <div th:each="imgUrl : ${product.imageUrls}">
+                                    <img th:src="${imgUrl}" alt="상품 이미지" style="width: 80px; height: auto;">
+                                </div>
+                                <div th:text="${product.name}"></div>
+                            </td>
+                            <td th:text="${product.description}">설명 없음</td>
+                            <td class="price" th:text="${product.price} + '원'"></td>
+                            <td class="action">
+                                <input type="number" name="quantity" min="0" value="0"
+                                       th:attr="data-id=${product.id}, data-price=${product.price}"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 주문 요약 -->
+        <div class="col-4 summary">
+            <form method="post" th:action="@{/orders}" id="orderForm">
+                <div class="title"><b>주문 정보 입력</b></div>
+
+                <label for="email">이메일</label>
+                <input type="text" id="email" name="email" required>
+
+                <label for="address">주소</label>
+                <input type="text" id="address" name="address" required>
+
+                <label for="postalCode">우편번호</label>
+                <input type="text" id="postalCode" name="postalCode" required>
+
+                <hr>
+                <div id="summary-list">
+                    <p>선택한 상품 정보가 여기에 표시됩니다.</p>
+                </div>
+                <hr>
+
+                <div>
+                    <strong>총금액: </strong>
+                    <span id="total-price">0</span>원
+                </div>
+
+                <button type="submit">주문하기</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const quantityInputs = document.querySelectorAll('input[name="quantity"]');
+    const summaryList = document.getElementById('summary-list');
+    const totalPrice = document.getElementById('total-price');
+
+    function updateSummary() {
+        let summaryHtml = '';
+        let total = 0;
+
+        quantityInputs.forEach(input => {
+            const quantity = parseInt(input.value) || 0;
+            const price = parseInt(input.getAttribute('data-price')) || 0;
+            const name = input.closest('tr').querySelector('td div').textContent;
+
+            if (quantity > 0) {
+                summaryHtml += `<div>${name} x ${quantity} = ${quantity * price}원</div>`;
+                total += quantity * price;
+            }
+        });
+
+        summaryList.innerHTML = summaryHtml || '<p>선택한 상품 정보가 여기에 표시됩니다.</p>';
+        totalPrice.textContent = total.toLocaleString();
+    }
+
+    quantityInputs.forEach(input => {
+        input.addEventListener('input', updateSummary);
+    });
+</script>
+
+</body>
+</html>

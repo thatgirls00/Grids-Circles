@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/order.css">
+    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <title>주문 페이지 | 수퍼노바 카페</title>
+</head>
+<body class="container-fluid">
+
+<div class="d-flex justify-content-end align-items-center mt-2 me-2" id="top-buttons">
+    <a href="/user" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">마이페이지</a>
+    <a href="/admin_login" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">관리자페이지</a>
+</div>
+
+<div class="row justify-content-center m-4">
+    <h1 class="text-center">수퍼노바 카페</h1>
+</div>
+
+<div class="card">
+    <div class="row">
+        <div class="col-md-8 mt-4 d-flex flex-column align-items-start p-3 pt-0" id="coffee-list-box">
+            <h5><b>상품 목록</b></h5>
+            <ul class="list-group list-group-flush products" id="coffee-list"></ul>
+        </div>
+
+        <div class="col-md-4 summary p-4">
+            <div><h5><b>Summary</b></h5></div><hr>
+            <div id="summary-list"></div>
+
+            <form id="delivery-info" style="padding-top: 10%">
+                <div class="mb-3">
+                    <label for="email" class="form-label">이메일</label>
+                    <input type="email" class="form-control" id="email" placeholder="example@domain.com" required>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">주소</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="address" readonly>
+                        <button type="button" class="btn btn-outline-secondary" id="search-address">주소 검색</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="postnum" class="form-label">우편번호</label>
+                    <input type="text" class="form-control" id="postnum">
+                </div>
+                <div class="mb-3">
+                    <label for="detail-address" class="form-label">상세주소</label>
+                    <input type="text" class="form-control" id="detail-address">
+                </div>
+                <div class="inform">당일 오후 2시 이후의 주문은 다음날 배송을 시작합니다.</div>
+            </form>
+
+            <div class="row pt-2 pb-2 border-top">
+                <h5 class="col">총 금액</h5>
+                <h5 class="col text-end" id="total-price">0원</h5>
+            </div>
+
+            <button class="btn btn-dark col-12 order-btn">결제하기</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let coffeeMap = {};
+    let coffeeImageIndex = {};
+
+    function prevImage(id) {
+        const coffee = coffeeMap[id];
+        if (!coffee?.images?.length) return;
+        coffeeImageIndex[id] = (coffeeImageIndex[id] - 1 + coffee.images.length) % coffee.images.length;
+        document.getElementById(`coffee-img-${id}`).src = coffee.images[coffeeImageIndex[id]];
+    }
+
+    function nextImage(id) {
+        const coffee = coffeeMap[id];
+        if (!coffee?.images?.length) return;
+        coffeeImageIndex[id] = (coffeeImageIndex[id] + 1) % coffee.images.length;
+        document.getElementById(`coffee-img-${id}`).src = coffee.images[coffeeImageIndex[id]];
+    }
+
+    fetch('http://localhost:8080/api/products')
+        .then(resp => resp.json())
+        .then(json => {
+            console.log('📦 백엔드에서 받은 응답:', json);
+
+            const list = json.data;
+            if (!Array.isArray(list)) {
+                console.error('❌ 예상과 다른 응답 구조입니다:', json);
+                return;
+            }
+
+            const ul = document.getElementById('coffee-list');
+            ul.innerHTML = '';
+
+            list.forEach(coffee => {
+                coffeeMap[coffee.id] = coffee;
+                coffeeImageIndex[coffee.id] = 0;
+
+                const li = document.createElement('li');
+                li.className = 'list-group-item d-flex align-items-center mt-3 position-relative';
+                li.setAttribute('data-name', coffee.name.toLowerCase());
+
+                const warning = coffee.stock <= 0 ? '품절' : (coffee.stock < 5 ? '품절임박!' : '');
+                const soldOut = coffee.stock <= 0;
+
+                li.innerHTML = `
+          <div class="col-3 position-relative" style="overflow: hidden; aspect-ratio: 1/1;">
+            ${warning ? `<div class="stock-label position-absolute top-0 start-0 m-2 fw-bold">${warning}</div>` : ''}
+            <img id="coffee-img-${coffee.id}" class="img-fluid" src="${coffee.imageUrls?.[0] || '/images/default.jpg'}" style="border-radius: 12px; width: 100%; height: 100%; object-fit: cover;">
+            ${(coffee.images?.length ?? 0) > 1 ? `
+              <button onclick="prevImage(${coffee.id})" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">◀</button>
+              <button onclick="nextImage(${coffee.id})" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">▶</button>
+            ` : ''}
+          </div>
+          <div class="col">
+            <div class="row text-muted">제품명</div>
+            <div class="row">${coffee.name}</div>
+          </div>
+          <div class="col text-center price">${coffee.price}원</div>
+          <div class="col text-end d-flex justify-content-end align-items-center">
+            <a class="btn btn-small btn-outline-dark del-button ${soldOut ? 'd-none' : ''}" href="#">-</a>
+            <a class="btn btn-small btn-outline-dark add-button ${soldOut ? 'd-none' : ''}" href="#">+</a>
+            ${soldOut ? `<span class="fw-bold text-danger ms-2" style="font-size: 20px;">Sold Out</span>` : ''}
+          </div>
+        `;
+
+                const summaryList = document.getElementById('summary-list');
+                const counts = {};
+                const name = coffee.name.toLowerCase();
+                const price = coffee.price;
+
+                li.querySelector('.add-button')?.addEventListener('click', e => {
+                    e.preventDefault();
+                    counts[name] = (counts[name] || 0) + 1;
+                    updateSummary(name, coffee.name, counts[name]);
+                    updatePrice(price);
+                });
+
+                li.querySelector('.del-button')?.addEventListener('click', e => {
+                    e.preventDefault();
+                    if (counts[name]) {
+                        counts[name]--;
+                        updatePrice(-price);
+                        if (counts[name] === 0) {
+                            removeSummary(name);
+                            delete counts[name];
+                        } else {
+                            updateSummary(name, coffee.name, counts[name]);
+                        }
+                    }
+                });
+
+                function updateSummary(name, label, count) {
+                    let row = summaryList.querySelector(`[data-name="${name}"]`);
+                    if (!row) {
+                        row = document.createElement('div');
+                        row.className = 'row';
+                        row.setAttribute('data-name', name);
+                        row.innerHTML = `<h6 class="p-0 summary-coffee-name">${label} <span class="product-count badge bg-dark" data-name="${name}">${count}개</span></h6>`;
+                        summaryList.appendChild(row);
+                    } else {
+                        row.querySelector('.product-count').textContent = `${count}개`;
+                    }
+                }
+
+                function removeSummary(name) {
+                    const row = summaryList.querySelector(`[data-name="${name}"]`);
+                    if (row) summaryList.removeChild(row);
+                }
+
+                function updatePrice(delta) {
+                    const current = parseInt(document.getElementById("total-price").textContent);
+                    const updated = current + delta;
+                    document.getElementById("total-price").textContent = `${updated}원`;
+                }
+
+                const imgWrapper = li.querySelector('.col-3');
+                imgWrapper.addEventListener('mouseenter', () => {
+                    imgWrapper.querySelectorAll('button').forEach(btn => btn.style.display = 'block');
+                });
+                imgWrapper.addEventListener('mouseleave', () => {
+                    imgWrapper.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
+                });
+
+                ul.appendChild(li);
+            });
+        });
+
+    document.getElementById('search-address').addEventListener('click', function () {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                document.getElementById('address').value = data.address;
+                document.getElementById('postnum').value = data.zonecode;
+            }
+        }).open();
+    });
+
+    document.querySelector('.order-btn').addEventListener('click', function () {
+        const email = document.getElementById('email').value;
+        const address = document.getElementById('address').value;
+        const postnum = document.getElementById('postnum').value;
+        const totalPrice = parseInt(document.getElementById('total-price').textContent);
+
+        if (!email.includes('@') || !address || !postnum || totalPrice === 0) {
+            alert('모든 정보를 정확히 입력해주세요.');
+            return;
+        }
+
+        const counts = {};
+        document.querySelectorAll('#summary-list .product-count').forEach(span => {
+            const name = span.dataset.name;
+            const count = parseInt(span.textContent);
+            if (count > 0) {
+                const product = Object.values(coffeeMap).find(p => p.name.toLowerCase() === name);
+                if (product) counts[product.id] = count;
+            }
+        });
+
+        const coffeeList = Object.entries(counts).map(([id, quantity]) => ({ coffeeId: parseInt(id), quantity }));
+
+        const data = {
+            email, address, postNum: postnum, price: totalPrice, coffeeList
+        };
+
+        fetch('http://localhost:8080/api/orders', {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        })
+            .then(resp => {
+                if (!resp.ok) return resp.json().then(err => { throw err; });
+                return resp.json();
+            })
+            .then(() => {
+                alert('주문이 완료되었습니다!');
+                location.reload();
+            })
+            .catch(err => {
+                alert(err?.error?.message || '알 수 없는 오류 발생');
+            });
+    });
+</script>
+
+</body>
+</html>
