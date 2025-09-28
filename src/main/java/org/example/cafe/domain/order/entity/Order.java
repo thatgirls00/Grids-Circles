@@ -6,6 +6,8 @@ import org.example.cafe.domain.member.entity.Member;
 import org.hibernate.annotations.Comment;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -41,14 +43,36 @@ public class Order {
     @JoinColumn(name = "member_id", nullable = false) // FK
     private Member member;
 
-    // TODO: 상품 추가 예정
-    public static Order createOrder(Member member, String address, String postalCode) {
-        return Order.builder()
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<OrderItem> orderItems = new ArrayList<>();
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+        updateTotalPrice();
+    }
+
+    public void updateTotalPrice() {
+        this.totalPrice = orderItems.stream()
+                .mapToInt(OrderItem::getOrderPrice)
+                .sum();
+    }
+
+    public static Order createOrder(Member member, String address, String postalCode, List<OrderItem> orderItems) {
+        Order order = Order.builder()
                 .member(member)
                 .orderDate(LocalDate.now())
                 .orderState(OrderState.READY)
                 .address(address)
                 .postalCode(postalCode)
+                .totalPrice(0) // 초기값
                 .build();
+
+        for (OrderItem item : orderItems) {
+            order.addOrderItem(item);
+        }
+
+        return order;
     }
 }
