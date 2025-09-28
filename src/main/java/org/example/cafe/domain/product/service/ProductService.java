@@ -4,6 +4,8 @@ import org.example.cafe.domain.product.dto.ProductDto;
 import org.example.cafe.domain.product.entity.Product;
 import org.example.cafe.domain.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.example.cafe.global.error.CustomException;
+import org.example.cafe.global.error.ErrorCode;
 import org.springframework.stereotype.Service;
 import org.example.cafe.domain.product.entity.CoffeeImg;
 
@@ -14,8 +16,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-    private final ProductRepository productRepository;
 
+    private final ProductRepository productRepository;
 
     public List<Product> findAll() {
         return productRepository.findAllWithImages();
@@ -37,6 +39,12 @@ public class ProductService {
 
     public void delete(Product product) {
         productRepository.delete(product);
+    }
+
+    //TODO: 추가 로직
+    public Product getProductOrThrow(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
     }
 
     public List<ProductDto> getProducts() {
