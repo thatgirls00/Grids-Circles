@@ -29,6 +29,9 @@ public class Member {
     @Column(name = "role", length = 20, nullable = false)
     private Role role;
 
+    @Column(nullable = true)
+    private String password; // USER는 null, ADMIN만 사용
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Order> orders = new ArrayList<>();
