@@ -21,11 +21,12 @@ public class Order {
     private Long id;
 
     @Comment("주문상태는 14:00을 기준으로 상태가 바뀜")
+    @Enumerated(EnumType.STRING)
     @Column(name = "orderState", length = 10, nullable = false)
     private OrderState orderState;
 
-    /*@Column(name = "totalPrice", nullable = false)
-    private int totalPrice;*/ //TODO: 상품 쪽에서 진행
+    @Column(name = "totalPrice", nullable = false)
+    private int totalPrice;
 
     @Column(name = "orderDate", nullable = false)
     private LocalDate orderDate;

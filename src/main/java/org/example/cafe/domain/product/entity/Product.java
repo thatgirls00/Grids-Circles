@@ -37,11 +37,12 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public String getDescription() {
+    // TODO: @getter 중복 코드입니다 !
+    /*public String getDescription() {
         return description;
     }
 
     public List<CoffeeImg> getImages() {
         return images;
-    }
+    }*/
 }

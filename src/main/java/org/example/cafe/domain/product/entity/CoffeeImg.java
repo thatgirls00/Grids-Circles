@@ -33,7 +33,8 @@ public class CoffeeImg {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    public String getUrl() {
+    // TODO: @getter 중복 코드입니다 !
+    /*public String getUrl() {
         return url;
-    }
+    }*/
 }
