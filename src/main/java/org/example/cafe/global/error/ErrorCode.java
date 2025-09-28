@@ -7,6 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
+    // 회원 관련
+    MEMBER_NOT_FOUND("M001", "회원 정보를 찾을 수 없습니다."),
+
     // 관리자 인증 관련
     ADMIN_ACCOUNT_NOT_FOUND("A001", "관리자 계정을 찾을 수 없습니다."),
     ADMIN_ROLE_REQUIRED("A002", "관리자 권한이 없습니다."),
