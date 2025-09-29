@@ -52,7 +52,9 @@
 
 ---
 
-## 프론트엔드 프로젝트 구조 
+
+
+## 프론트엔드 프로젝트 구조
 ```plaintext
 src
 └── main
@@ -79,20 +81,3 @@ src
         │   ├── user.html
         │   └── user_login.html
         └── application.yml
-
-
-## 프로젝트 구조 (예시)
-```plaintext
-cafe-menu-service
- ┣ backend
- ┃ ┣ src
- ┃ ┃ ┣ main
- ┃ ┃ ┃ ┣ java
- ┃ ┃ ┃ ┣ resources
- ┃ ┃ ┗ test
- ┣ frontend
- ┃ ┣ src
- ┃ ┣ public
- ┃ ┗ package.json
- ┣ docs
- ┗ README.md
