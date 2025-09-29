@@ -45,4 +45,24 @@ public class Product {
     public List<CoffeeImg> getImages() {
         return images;
     }*/
+
+    /**
+     * 양방향 연관 관계 설정을 위한 편의 메서드
+     * Product에 CoffeeImg를 추가하고, CoffeeImg에도 Product를 설정합니다.
+     * @param image Product에 연결할 CoffeeImg 엔티티
+     */
+    public void addImage(CoffeeImg image) {
+        this.images.add(image);
+
+        // 무한 루프 방지 조건문 추가
+        if (image.getCoffee() != this) {
+            image.setCoffee(this);
+        }
+    }
+
+    public void removeImage(CoffeeImg image) {
+        this.images.remove(image);
+        image.setProduct(null); // 양방향 관계 해제
+        // @OneToMany에 CascadeType.ALL 또는 orphanRemoval=true 설정 시 DB에서 자동 삭제
+    }
 }

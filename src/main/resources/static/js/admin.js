@@ -98,13 +98,30 @@ function addCoffee() {
         formData.append('images', images[i]);
     }
 
+    fetch(`/admin/products`, { method: 'POST', body: formData })
+        .then(res => {
+            // 응답 상태가 2xx가 아니면 오류 발생
+            if (!res.ok) {
+                // 서버에서 받은 오류 메시지를 확인하기 위해 텍스트로 읽음
+                return res.text().then(text => { throw new Error(text) });
+            }
+            return res.json();
+        })
+        .then(() => {
+            clearPostForm();
+            loadCoffees();
+        })
+        .catch(err => {
+            console.error("상품 등록 실패:", err); // 상세 에러 출력
+        });
+/*
     fetch(`/coffees`, { method: 'POST', body: formData })
         .then(res => res.json())
         .then(() => {
             clearPostForm();
             loadCoffees();
         })
-        .catch(console.log);
+        .catch(console.log);*/
 }
 
 function updateCoffee() {
@@ -120,7 +137,7 @@ function updateCoffee() {
         formData.append('images', imageInput.files[i]);
     }
 
-    fetch(`/coffees/${selectedCoffeeId}`, {
+    fetch(`/admin/products/${selectedCoffeeId}`, {
         method: 'PUT',
         body: formData
     })
@@ -138,7 +155,7 @@ function updateCoffee() {
 function deleteCoffee(id) {
     if (!id || !confirm("정말 삭제하시겠습니까?")) return;
 
-    fetch(`/coffees/${id}`, { method: 'DELETE' })
+    fetch(`/admin/products/${id}`, { method: 'DELETE' })
         .then(() => {
             delete coffeeMap[id];
             loadCoffees();
