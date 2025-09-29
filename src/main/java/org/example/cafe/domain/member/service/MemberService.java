@@ -24,6 +24,10 @@ public class MemberService {
      * 회원이 아닐 경우: memberRepository 에 save
      */
 
+    public boolean existsByEmail(String email) {
+        return memberRepository.existsByEmail(email);
+    }
+
     public Member registerOrFindMember(String email) {
         return memberRepository.findByEmail(email)
                 .orElseGet(() -> memberRepository.save(Member.createNew(email)));

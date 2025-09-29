@@ -24,28 +24,19 @@
             padding-top: 5%;
             background: #f5f5f5;
         }
-
     </style>
 </head>
 <body>
 
-<script>
-    fetch('http://localhost:8080/api/members/')
-        .then(resp => resp.json())
-        .then(user => {
-            console.log(`==============유저정보============`);
-            console.log(user);
-            const username = user.username;
-            console.log(username);
-            document.querySelector('h3').textContent = `고객님의 주문목록`;
-        });
-</script>
-
 <div class="d-flex justify-content-end align-items-center mt-2 me-2" id="top-buttons">
-    <a href="/index" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap; margin-right: 10px">주문 페이지로 돌아가기</a>
+    <a href="/index" class="btn btn-small btn-outline-dark del-button"
+       style="text-decoration: none; width: auto; height: auto; white-space: nowrap; margin-right: 10px">
+        주문 페이지로 돌아가기
+    </a>
 </div>
+
 <br><br>
-<h3></h3>
+<h3>고객님의 주문목록</h3>
 <hr>
 <br>
 <div>
@@ -54,8 +45,8 @@
         <tr>
             <th style="text-align: center">번호</th>
             <th style="text-align: center">주문 번호</th>
-            <th style="text-align: center">주문 시각</th>
-            <th style="text-align: center">주소 </th>
+            <th style="text-align: center">이메일</th>
+            <th style="text-align: center">주소</th>
             <th style="text-align: center">상품명</th>
             <th style="text-align: center">수량</th>
             <th style="text-align: center">총 가격</th>
@@ -68,62 +59,60 @@
 </div>
 
 <script>
-    fetch('http://localhost:8080/api/members/')
-        .then(resp => resp.json())
-        .then(user => {
-            fetch(`http://localhost:8080/orders?email=${user.email}`)
-                .then(resp => resp.json())
-                .then(response => {
-                    const orders = response.data;
+    // 로그인 시 저장된 이메일 가져오기
+    const userEmail = sessionStorage.getItem("userEmail");
 
-                    const tbody = document.getElementById("orderTable");
-                    tbody.innerHTML = '';
+    if (!userEmail) {
+        alert("로그인이 필요합니다.");
+        window.location.href = "/user_login";
+    } else {
+        fetch(`http://localhost:8080/api/members/${userEmail}/orders`)
+            .then(resp => resp.json())
+            .then(response => {
+                const orders = response.data;
+                const tbody = document.getElementById("orderTable");
+                tbody.innerHTML = '';
 
+                if (!orders || orders.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="8" style="text-align: center; color: gray;">
+                                주문 내역이 없습니다.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
 
-                    if (orders == null || orders.length === 0) {
-                        tbody.innerHTML = `
-                  <tr>
-                      <td colspan="8" style="text-align: center; color: gray;">
-                          주문 내역이 없습니다.
-                      </td>
-                  </tr>
-              `;
-                    } else {
+                orders.forEach((order, index) => {
+                    const productNames = order.items
+                        .map(item => item.productName)
+                        .join('<br>');
 
-                        orders.forEach((order, index) => {
-                            const coffeeList = order['coffee-list'];
-                            const dateTime = order.orderedAt;
-                            const [date, time] = dateTime.split('T');
-                            const formattedTime = time.substring(0, 5);
-                            const displayDateTime = `${date}<br>${formattedTime}`;
+                    const quantities = order.items
+                        .map(item => `${item.quantity}개`)
+                        .join('<br>');
 
-                            const coffeeNames = coffeeList
-                                .map(coffee => coffee.coffeeName)
-                                .join('<br>');
-                            const quantities = coffeeList
-                                .map(coffee => coffee.quantity)
-                                .join('개<br>');
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-              <td style="text-align: center">${index + 1}</td>
-              <td style="text-align: center">${order.id}</td>
-              <td style="text-align: center">${displayDateTime}</td>
-              <td style="text-align: center">${order.address}</td>
-              <td style="text-align: center">${coffeeNames}</td>
-              <td style="text-align: center">${quantities}개</td>
-              <td style="text-align: center">${order.price}원</td>
-              <td style="text-align: center; color: ${order.isProcessed ? 'green' : 'red'}; font-weight: bold;">
-                ${order.isProcessed ? '배달 완료' : '배달 준비중'}
-                </td>
-        `;
-
-                            tbody.appendChild(row);
-                        })
-
-                    }
-
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="text-align: center">${index + 1}</td>
+                        <td style="text-align: center">${order.orderId}</td>
+                        <td style="text-align: center">${order.email}</td>
+                        <td style="text-align: center">${order.address} (${order.postalCode})</td>
+                        <td style="text-align: center">${productNames}</td>
+                        <td style="text-align: center">${quantities}</td>
+                        <td style="text-align: center">${order.totalPrice}원</td>
+                        <td style="text-align: center; font-weight: bold; color: ${order.orderState === 'COMPLETED' ? 'green' : 'red'};">
+                            ${order.orderState === 'COMPLETED' ? '배달 완료' : '배달 준비중'}
+                        </td>
+                    `;
+                    tbody.appendChild(row);
                 });
-        });
+            })
+            .catch(err => {
+                console.error("주문 내역 조회 실패:", err);
+            });
+    }
 </script>
 </body>
 </html>

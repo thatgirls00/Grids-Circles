@@ -1,6 +1,8 @@
 package org.example.cafe.frontTestcontroller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.cafe.domain.member.entity.Member;
+import org.example.cafe.domain.member.service.MemberService;
 import org.example.cafe.domain.product.dto.ProductDto;
 import org.example.cafe.domain.product.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import java.util.List;
 public class testViewController {
 
     private final ProductService productService;
+    private final MemberService memberService;
 
     @GetMapping("/index")
     public String showIndexPage(Model model) {
@@ -49,19 +52,20 @@ public class testViewController {
     }
 
     @PostMapping("/login")
-    public String handleLogin(@RequestParam("username") String username,
+    public String handleLogin(@RequestParam("email") String email,
                               @RequestParam(value = "password", required = false) String password) {
 
         // 관리자 로그인
-        if ("admin@admin.com".equals(username) && "admin".equals(password)) {
+        if ("admin@admin.com".equals(email) && "admin".equals(password)) {
             return "redirect:/admin";
         }
 
-        // 사용자 로그인 - 이메일만 비교
-        if ("NBE791@gmail.com".equalsIgnoreCase(username)) {
-            return "redirect:/user";  // 사용자 페이지로 이동
+        // 사용자 로그인 - DB 이메일 확인
+        if (memberService.existsByEmail(email)) {
+            return "redirect:/user";
         }
 
-        // 로그인 실패
+        // 실패
         return "redirect:/user_login?error=true";
-    }}
+    }
+}
