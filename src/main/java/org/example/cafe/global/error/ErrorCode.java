@@ -7,11 +7,19 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
 
+    // 회원 관련
+    MEMBER_NOT_FOUND("M001", "회원 정보를 찾을 수 없습니다."),
+
     // 관리자 인증 관련
     ADMIN_ACCOUNT_NOT_FOUND("A001", "관리자 계정을 찾을 수 없습니다."),
     ADMIN_ROLE_REQUIRED("A002", "관리자 권한이 없습니다."),
     ADMIN_PASSWORD_MISMATCH("A003", "비밀번호가 일치하지 않습니다."),
 
+    // 상품 관련
+    PRODUCT_NOT_FOUND("P001", "상품을 찾을 수 없습니다."),
+    // TODO: 상품 수량 부족
+    PRODUCT_OUT_OF_STOCK("P002", "상품 재고가 부족합니다."),
+    PRODUCT_ALREADY_EXISTS("P003", "이미 존재하는 상품입니다."),
 
     EXAMPLE_ERROR_CODE("E001", "샘플 에러입니다.");
 
