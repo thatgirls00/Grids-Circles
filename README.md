@@ -102,6 +102,11 @@
 
 ---
 
+## ERD
+<img width="2060" height="812" alt="Image" src="https://github.com/user-attachments/assets/959c23f1-0653-4c87-a717-ca007aa257a0" />
+
+---
+
 
 ## FrontEnd Project Structure
 ```plaintext
