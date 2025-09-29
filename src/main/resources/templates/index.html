@@ -7,12 +7,21 @@
     <link rel="stylesheet" href="/css/order.css">
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <title>주문 페이지 | 수퍼노바 카페</title>
+    <style>
+        /* 버튼이 겹치지 않게 margin 추가 */
+        #top-buttons a {
+            margin-left: 8px;
+            min-width: 100px;  /* 버튼이 글자 크기에 맞게 넓어지도록 */
+            text-align: center;
+        }
+    </style>
 </head>
 <body class="container-fluid">
 
+<!-- ✅ 상단 버튼 (가로로 정렬 + 여백 추가) -->
 <div class="d-flex justify-content-end align-items-center mt-2 me-2" id="top-buttons">
-    <a href="/user_login" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">사용자페이지</a>
-    <a href="/admin_login" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">관리자페이지</a>
+    <a href="/user_login" class="btn btn-sm btn-outline-dark">사용자페이지</a>
+    <a href="/admin_login" class="btn btn-sm btn-outline-dark">관리자페이지</a>
 </div>
 
 <div class="row justify-content-center m-4">
@@ -21,11 +30,13 @@
 
 <div class="card">
     <div class="row">
+        <!-- 상품 목록 -->
         <div class="col-md-8 mt-4 d-flex flex-column align-items-start p-3 pt-0" id="coffee-list-box">
             <h5><b>상품 목록</b></h5>
             <ul class="list-group list-group-flush products" id="coffee-list"></ul>
         </div>
 
+        <!-- 주문 요약 -->
         <div class="col-md-4 summary p-4">
             <div><h5><b>Summary</b></h5></div><hr>
             <div id="summary-list"></div>
@@ -81,6 +92,7 @@
         document.getElementById(`coffee-img-${id}`).src = coffee.images[coffeeImageIndex[id]];
     }
 
+    // 상품 불러오기
     fetch('http://localhost:8080/api/products')
         .then(resp => resp.json())
         .then(json => {
@@ -110,10 +122,6 @@
           <div class="col-3 position-relative" style="overflow: hidden; aspect-ratio: 1/1;">
             ${warning ? `<div class="stock-label position-absolute top-0 start-0 m-2 fw-bold">${warning}</div>` : ''}
             <img id="coffee-img-${coffee.id}" class="img-fluid" src="${coffee.imageUrls?.[0] || '/images/default.jpg'}" style="border-radius: 12px; width: 100%; height: 100%; object-fit: cover;">
-            ${(coffee.images?.length ?? 0) > 1 ? `
-              <button onclick="prevImage(${coffee.id})" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">◀</button>
-              <button onclick="nextImage(${coffee.id})" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); background: transparent; border: none; color: gray; font-size: 12px; display: none;">▶</button>
-            ` : ''}
           </div>
           <div class="col">
             <div class="row text-muted">제품명</div>
@@ -121,9 +129,9 @@
           </div>
           <div class="col text-center price">${coffee.price}원</div>
           <div class="col text-end d-flex justify-content-end align-items-center">
-            <a class="btn btn-small btn-outline-dark del-button ${soldOut ? 'd-none' : ''}" href="#">-</a>
-            <a class="btn btn-small btn-outline-dark add-button ${soldOut ? 'd-none' : ''}" href="#">+</a>
-            ${soldOut ? `<span class="fw-bold text-danger ms-2" style="font-size: 20px;">Sold Out</span>` : ''}
+            <a class="btn btn-sm btn-outline-dark del-button ${soldOut ? 'd-none' : ''}" href="#">-</a>
+            <a class="btn btn-sm btn-outline-dark add-button ${soldOut ? 'd-none' : ''}" href="#">+</a>
+            ${soldOut ? `<span class="fw-bold text-danger ms-2">Sold Out</span>` : ''}
           </div>
         `;
 
@@ -132,6 +140,7 @@
                 const name = coffee.name.toLowerCase();
                 const price = coffee.price;
 
+                // 수량 추가
                 li.querySelector('.add-button')?.addEventListener('click', e => {
                     e.preventDefault();
                     counts[name] = (counts[name] || 0) + 1;
@@ -139,6 +148,7 @@
                     updatePrice(price);
                 });
 
+                // 수량 제거
                 li.querySelector('.del-button')?.addEventListener('click', e => {
                     e.preventDefault();
                     if (counts[name]) {
@@ -159,7 +169,7 @@
                         row = document.createElement('div');
                         row.className = 'row';
                         row.setAttribute('data-name', name);
-                        row.innerHTML = `<h6 class="p-0 summary-coffee-name">${label} <span class="product-count badge bg-dark" data-name="${name}">${count}개</span></h6>`;
+                        row.innerHTML = `<h6>${label} <span class="product-count badge bg-dark" data-name="${name}">${count}개</span></h6>`;
                         summaryList.appendChild(row);
                     } else {
                         row.querySelector('.product-count').textContent = `${count}개`;
@@ -172,23 +182,16 @@
                 }
 
                 function updatePrice(delta) {
-                    const current = parseInt(document.getElementById("total-price").textContent);
+                    const current = parseInt(document.getElementById("total-price").textContent) || 0;
                     const updated = current + delta;
                     document.getElementById("total-price").textContent = `${updated}원`;
                 }
-
-                const imgWrapper = li.querySelector('.col-3');
-                imgWrapper.addEventListener('mouseenter', () => {
-                    imgWrapper.querySelectorAll('button').forEach(btn => btn.style.display = 'block');
-                });
-                imgWrapper.addEventListener('mouseleave', () => {
-                    imgWrapper.querySelectorAll('button').forEach(btn => btn.style.display = 'none');
-                });
 
                 ul.appendChild(li);
             });
         });
 
+    // 주소 검색 (다음 API)
     document.getElementById('search-address').addEventListener('click', function () {
         new daum.Postcode({
             oncomplete: function (data) {
@@ -198,6 +201,7 @@
         }).open();
     });
 
+    // 주문 전송
     document.querySelector('.order-btn').addEventListener('click', function () {
         const email = document.getElementById('email').value;
         const address = document.getElementById('address').value;
@@ -209,6 +213,7 @@
             return;
         }
 
+        // 상품 데이터 수집
         const counts = {};
         document.querySelectorAll('#summary-list .product-count').forEach(span => {
             const name = span.dataset.name;
@@ -219,12 +224,17 @@
             }
         });
 
-        const coffeeList = Object.entries(counts).map(([id, quantity]) => ({ coffeeId: parseInt(id), quantity }));
+        // DTO 구조와 맞춤
+        const products = Object.entries(counts).map(([id, quantity]) => ({ productId: parseInt(id), quantity }));
 
         const data = {
-
-            email, address, postNum: postnum, price: totalPrice, coffeeList
+            email,
+            address,
+            postalCode: postnum,
+            products
         };
+
+        console.log("전송 JSON:", data);
 
         fetch('http://localhost:8080/api/orders', {
             method: "POST",
