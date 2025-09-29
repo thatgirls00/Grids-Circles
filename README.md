@@ -52,6 +52,35 @@
 
 ---
 
+## 프론트엔드 프로젝트 구조 
+```plaintext
+src
+└── main
+    └── resources
+        ├── static
+        │   ├── css
+        │   │   ├── admin.css
+        │   │   ├── admin_login.css
+        │   │   └── order.css
+        │   ├── img
+        │   │   ├── cafe1.png
+        │   │   ├── cafe2.png
+        │   │   ├── cafe3.png
+        │   │   └── cafe4.png
+        │   └── js
+        │       └── admin.js
+        ├── templates
+        │   ├── admin.html
+        │   ├── admin_login.html
+        │   ├── index.html
+        │   ├── order-confirm.html
+        │   ├── order-summary.html
+        │   ├── order.html
+        │   ├── user.html
+        │   └── user_login.html
+        └── application.yml
+
+
 ## 프로젝트 구조 (예시)
 ```plaintext
 cafe-menu-service
