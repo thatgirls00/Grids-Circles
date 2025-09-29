@@ -23,8 +23,9 @@ public class AdminProductService {
         productRepository.findByName(requestDto.getName()).ifPresent(p -> {
             throw new CustomException(ErrorCode.PRODUCT_ALREADY_EXISTS);
         });
-
+        
         Product saved = productRepository.save(requestDto.toEntity());
+        System.out.println("product saved: " + saved.getName()+" "+saved.getPrice()+"원");
         return AdminProductResponseDto.fromEntity(saved);
     }
 
