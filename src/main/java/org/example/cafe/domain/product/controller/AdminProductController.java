@@ -18,7 +18,7 @@ public class AdminProductController {
     // 상품 등록
     @PostMapping
     public ResponseEntity<RsData<AdminProductResponseDto>> createProduct(
-            @RequestBody AdminProductRequestDto requestDto
+            @ModelAttribute AdminProductRequestDto requestDto
     ) {
         AdminProductResponseDto response = adminProductService.createProduct(requestDto);
         return ResponseEntity.ok(new RsData<>("200", "상품 등록 완료", response));
@@ -28,8 +28,9 @@ public class AdminProductController {
     @PutMapping("/{id}")
     public ResponseEntity<RsData<AdminProductResponseDto>> updateProduct(
             @PathVariable Long id,
-            @RequestBody AdminProductRequestDto requestDto
+            @ModelAttribute AdminProductRequestDto requestDto
     ) {
+        System.out.println("======================================");
         AdminProductResponseDto response = adminProductService.updateProduct(id, requestDto);
         return ResponseEntity.ok(new RsData<>("200", "상품 수정 완료", response));
     }

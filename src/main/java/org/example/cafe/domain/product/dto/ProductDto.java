@@ -26,7 +26,7 @@ public class ProductDto {
         this.quantity = product.getQuantity();
         this.imageUrls = product.getImages()
                 .stream()
-                .map(img -> "/img/" + img.getUrl())
+                .map(img -> img.getUrl())
                 .collect(Collectors.toList());
     }
 }

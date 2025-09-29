@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.example.cafe.domain.product.entity.Product;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -13,6 +14,8 @@ public class AdminProductRequestDto {
     private int price;
     private int quantity;
     private String description;
+    private MultipartFile[] images;
+
     // TODO: 이미지 업로드가 필요하다면 여기서 imageUrls 대신 MultipartFile[] 같은 걸로 처리
 
     public Product toEntity() {
