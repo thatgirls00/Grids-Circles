@@ -110,28 +110,18 @@
 
 ## FrontEnd Project Structure
 ```plaintext
-src
-└── main
-    └── resources
-        ├── static
-        │   ├── css
-        │   │   ├── admin.css
-        │   │   ├── admin_login.css
-        │   │   └── order.css
-        │   ├── img
-        │   │   ├── cafe1.png
-        │   │   ├── cafe2.png
-        │   │   ├── cafe3.png
-        │   │   └── cafe4.png
-        │   └── js
-        │       └── admin.js
-        ├── templates
-        │   ├── admin.html
-        │   ├── admin_login.html
-        │   ├── index.html
-        │   ├── order-confirm.html
-        │   ├── order-summary.html
-        │   ├── order.html
-        │   ├── user.html
-        │   └── user_login.html
-        └── application.yml
+backend/
+ ├── src/
+ ├──── domain
+ ├──── global
+ ├──── scheduler
+ └── ...
+frontend/
+ ├── resources/
+ ├──── static
+ ├────── css
+ ├────── img
+ ├────── js
+ ├──── templates
+ ├────── html
+ └── ...
