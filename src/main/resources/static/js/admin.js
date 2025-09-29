@@ -32,13 +32,13 @@ function loadCoffees() {
         .then(response => {
             let data = [];
 
-            // ✅ 응답 형식 확인 및 안전하게 파싱
+            // 응답 형식 확인 및 안전하게 파싱
             if (Array.isArray(response)) {
                 data = response;
             } else if (response && Array.isArray(response.data)) {
                 data = response.data;
             } else {
-                console.error("🚨 예상치 못한 응답 형식입니다:", response);
+                console.error("예상치 못한 응답 형식입니다:", response);
                 return;
             }
 
@@ -68,7 +68,7 @@ function loadCoffees() {
             });
         })
         .catch(err => {
-            console.error("❌ 에러 발생:", err);
+            console.error("에러 발생:", err);
         });
 }
 
