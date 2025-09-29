@@ -30,6 +30,9 @@ public class testViewController {
         return "user";
     }
 
+    @GetMapping("/user_login")
+    public String showUserLogin() {return "user_login";}
+
     @GetMapping("/admin_login")
     public String showAdminLogin() {
         return "admin_login";
@@ -45,16 +48,20 @@ public class testViewController {
         return "index"; // templates/index.html 로 연결
     }
 
-    // 관리자 로그인 처리
     @PostMapping("/login")
-    public String handleLogin(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password
-    ) {
+    public String handleLogin(@RequestParam("username") String username,
+                              @RequestParam(value = "password", required = false) String password) {
+
+        // 관리자 로그인
         if ("admin@admin.com".equals(username) && "admin".equals(password)) {
             return "redirect:/admin";
-        } else {
-            return "redirect:/admin_login?error=true";
         }
-    }
-}
+
+        // 사용자 로그인 - 이메일만 비교
+        if ("NBE791@gmail.com".equalsIgnoreCase(username)) {
+            return "redirect:/user";  // 사용자 페이지로 이동
+        }
+
+        // 로그인 실패
+        return "redirect:/user_login?error=true";
+    }}
