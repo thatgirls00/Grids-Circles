@@ -14,9 +14,9 @@
 ## 팀원 소개
 | 이름   | 역할            |
 |--------|-----------------|
-| 전현수 | 팀장, Frontend  |
-| 임병수 | 팀원, Backend   |
-| 김영인 | 팀원, Backend   |
+| 전현수  | 팀장, Frontend 담당 전체 프로젝트 기획 및 일정 관리 / 프론트엔드 개발 (UI 설계, 정적 리소스 구성) / DB 테이블 설계 및 관리 / 커피 이미지 연동 및 백엔드 코드 수정|
+| 임병수  | 팀원, Backend 주문 처리 관련 API 개발• 사용자 정보 처리 로직 구현• JPA 기반 도메인 설계 및 예외 처리|
+| 김영인  | 팀원, Backend 상품 등록 및 조회 기능 구현• 관리자 페이지 관련 로직 개발 |
 
 ---
 
@@ -52,18 +52,32 @@
 
 ---
 
-## 프로젝트 구조 (예시)
+
+
+## 프론트엔드 프로젝트 구조
 ```plaintext
-cafe-menu-service
- ┣ backend
- ┃ ┣ src
- ┃ ┃ ┣ main
- ┃ ┃ ┃ ┣ java
- ┃ ┃ ┃ ┣ resources
- ┃ ┃ ┗ test
- ┣ frontend
- ┃ ┣ src
- ┃ ┣ public
- ┃ ┗ package.json
- ┣ docs
- ┗ README.md
+src
+└── main
+    └── resources
+        ├── static
+        │   ├── css
+        │   │   ├── admin.css
+        │   │   ├── admin_login.css
+        │   │   └── order.css
+        │   ├── img
+        │   │   ├── cafe1.png
+        │   │   ├── cafe2.png
+        │   │   ├── cafe3.png
+        │   │   └── cafe4.png
+        │   └── js
+        │       └── admin.js
+        ├── templates
+        │   ├── admin.html
+        │   ├── admin_login.html
+        │   ├── index.html
+        │   ├── order-confirm.html
+        │   ├── order-summary.html
+        │   ├── order.html
+        │   ├── user.html
+        │   └── user_login.html
+        └── application.yml
