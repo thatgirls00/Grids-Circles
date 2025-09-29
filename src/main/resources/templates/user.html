@@ -30,7 +30,7 @@
 <body>
 
 <script>
-    fetch('http://localhost:8080/auth/me')
+    fetch('http://localhost:8080/api/members/')
         .then(resp => resp.json())
         .then(user => {
             console.log(`==============유저정보============`);
@@ -68,7 +68,7 @@
 </div>
 
 <script>
-    fetch('http://localhost:8080/auth/me')
+    fetch('http://localhost:8080/api/members/')
         .then(resp => resp.json())
         .then(user => {
             fetch(`http://localhost:8080/orders?email=${user.email}`)

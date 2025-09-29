@@ -11,7 +11,7 @@
 <body class="container-fluid">
 
 <div class="d-flex justify-content-end align-items-center mt-2 me-2" id="top-buttons">
-    <a href="/user" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">마이페이지</a>
+    <a href="/user_login" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">사용자페이지</a>
     <a href="/admin_login" class="btn btn-small btn-outline-dark del-button" style="text-decoration: none; width: auto; height: auto; white-space: nowrap;">관리자페이지</a>
 </div>
 
@@ -84,11 +84,11 @@
     fetch('http://localhost:8080/api/products')
         .then(resp => resp.json())
         .then(json => {
-            console.log('📦 백엔드에서 받은 응답:', json);
+            console.log('백엔드에서 받은 응답:', json);
 
             const list = json.data;
             if (!Array.isArray(list)) {
-                console.error('❌ 예상과 다른 응답 구조입니다:', json);
+                console.error('예상과 다른 응답 구조입니다:', json);
                 return;
             }
 
@@ -222,6 +222,7 @@
         const coffeeList = Object.entries(counts).map(([id, quantity]) => ({ coffeeId: parseInt(id), quantity }));
 
         const data = {
+
             email, address, postNum: postnum, price: totalPrice, coffeeList
         };
 
